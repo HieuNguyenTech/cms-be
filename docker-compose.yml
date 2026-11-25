@@ -1,0 +1,51 @@
+# Local stack. Ports are bound to localhost only: MongoDB and Redis have no password.
+services:
+  api:
+    build: .
+    env_file: .env
+    environment:
+      # Inside Docker the services are reached by name, not by localhost.
+      MONGODB_URI: mongodb://mongo:27017/cms?replicaSet=rs0&directConnection=true
+      REDIS_URL: redis://redis:6379
+      PORT: 8000
+    ports: ['127.0.0.1:8000:8000']
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:8000/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 10s
+      retries: 10
+
+  mongo:
+    image: mongo:8
+    command: ['--replSet', 'rs0', '--bind_ip_all']
+    ports: ['127.0.0.1:27017:27017']
+    volumes: ['mongo-data:/data/db']
+    healthcheck:
+      test:
+        - CMD
+        - mongosh
+        - --quiet
+        - --eval
+        - "try { rs.status() } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }) }"
+      interval: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    ports: ['127.0.0.1:6379:6379']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      retries: 20
+
+volumes:
+  mongo-data:
