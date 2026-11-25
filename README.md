@@ -22,7 +22,7 @@ docker compose logs -f api
 
 - API: `http://localhost:8000`
 - Swagger (không bật ở production): `http://localhost:8000/docs`
-- Health check: `GET /health`
+- Health check: `GET /api/health`
 
 Lần chạy đầu tạo vai trò `super_admin`, `editor`, `author` và tài khoản quản trị từ `ADMIN_EMAIL`,
 `ADMIN_PASSWORD`. `editor` và `author` chưa có quyền nào cho đến khi bạn gán.
@@ -64,15 +64,15 @@ Phụ thuộc một chiều: `modules` -> `common` -> `core` -> `config`. ESLint
 
 | Method | Đường dẫn | Quyền |
 |---|---|---|
-| POST | `/auth/login`, `/auth/refresh` | công khai |
-| GET | `/auth/me` | đã đăng nhập |
-| POST | `/auth/logout` | đã đăng nhập |
-| PUT | `/auth/password` | đã đăng nhập |
-| GET | `/permissions`, `/roles`, `/roles/:id` | `role:read` |
-| POST, PATCH, DELETE | `/roles`, `/roles/:id` | `role:manage` |
-| GET | `/users`, `/users/:id` | `user:read` |
-| POST, PATCH, DELETE | `/users`, `/users/:id` | `user:manage` |
-| PUT | `/users/:id/roles` | `user:manage` |
+| POST | `/api/auth/login`, `/api/auth/refresh` | công khai |
+| GET | `/api/auth/me` | đã đăng nhập |
+| POST | `/api/auth/logout` | đã đăng nhập |
+| PUT | `/api/auth/password` | đã đăng nhập |
+| GET | `/api/permissions`, `/api/roles`, `/api/roles/:id` | `role:read` |
+| POST, PATCH, DELETE | `/api/roles`, `/api/roles/:id` | `role:manage` |
+| GET | `/api/users`, `/api/users/:id` | `user:read` |
+| POST, PATCH, DELETE | `/api/users`, `/api/users/:id` | `user:manage` |
+| PUT | `/api/users/:id/roles` | `user:manage` |
 
 Response thành công: `{ "data": ..., "meta": ... }`. Lỗi: `{ "statusCode": ..., "message": ... }`.
 

@@ -10,6 +10,8 @@ import { APP_CONFIG, AppConfig } from './config/app-config'
 export async function setupApp(app: NestFastifyApplication): Promise<void> {
   const config = app.get<AppConfig>(APP_CONFIG)
 
+  app.setGlobalPrefix('api')
+
   // The content security policy would block the Swagger UI, which only runs outside production.
   await app.register(fastifyHelmet, config.isProduction ? {} : { contentSecurityPolicy: false })
   app.enableCors({

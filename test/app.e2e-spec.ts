@@ -19,7 +19,7 @@ describe('API (e2e)', () => {
   const call = async (method: Method, url: string, token?: string, body?: object) => {
     const response = await app.inject({
       method,
-      url,
+      url: url.startsWith('/api/') ? url : `/api${url}`,
       payload: body,
       headers: token ? { authorization: `Bearer ${token}` } : {}
     })
@@ -27,7 +27,7 @@ describe('API (e2e)', () => {
   }
 
   const login = async (credentials: { email: string; password: string }) => {
-    const { status, body } = await call('POST', '/auth/login', undefined, credentials)
+    const { status, body } = await call('POST', '/api/auth/login', undefined, credentials)
     expect(status).toBe(200)
     return body.data as { accessToken: string; refreshToken: string }
   }

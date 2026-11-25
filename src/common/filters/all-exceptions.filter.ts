@@ -14,7 +14,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
       this.logger.error(exception instanceof Error ? exception.stack : String(exception))
     }
 
-    void reply.status(status).send({ statusCode: status, message })
+    void reply.status(status).send({
+      data: null,
+      error: { code: this.errorCode(status), status, message },
+      meta: null
+    })
+  }
+
+  private errorCode(status: number): string {
+    return HttpStatus[status] ?? 'HTTP_ERROR'
   }
 
   private describe(exception: unknown): { status: number; message: string | string[] } {

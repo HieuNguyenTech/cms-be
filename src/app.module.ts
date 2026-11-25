@@ -9,6 +9,7 @@ import { HealthModule } from './modules/health/health.module'
 import { RoleModule } from './modules/role/role.module'
 import { SeedModule } from './modules/seed/seed.module'
 import { UserModule } from './modules/user/user.module'
+import { ContactModule } from './modules/contact/contact.module'
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UserModule } from './modules/user/user.module'
     AuthModule,
     RoleModule,
     UserModule,
+    ContactModule,
     SeedModule
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }]
